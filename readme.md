@@ -4,4 +4,6 @@
 
 Right now it looks like this. You can build it with `cargo run` or download exe in releases
 
+Controls: `WASD`
+
 ![Game](./assets/game.png)
