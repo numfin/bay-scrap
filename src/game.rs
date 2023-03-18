@@ -1,34 +1,22 @@
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
 
 use crate::camera::CameraPlugin;
 use crate::controls::ControlsPlugin;
+use crate::enemy::EnemyPlugin;
+use crate::game_over::GameOverPlugin;
+use crate::player::PlayerPlugin;
+use crate::stars::StarsPlugin;
+use crate::system_sets::{LimitMovementSystemSet, MovementSystemSet};
 
 pub fn run() {
     App::new()
+        .configure_set(LimitMovementSystemSet.after(MovementSystemSet))
         .add_plugins(DefaultPlugins)
         .add_plugin(CameraPlugin)
         .add_plugin(ControlsPlugin)
-        .add_startup_system(spawn_player)
+        .add_plugin(PlayerPlugin)
+        .add_plugin(EnemyPlugin)
+        .add_plugin(StarsPlugin)
+        .add_plugin(GameOverPlugin)
         .run();
-}
-
-#[derive(Component)]
-pub struct Player {}
-
-pub fn spawn_player(
-    mut commands: Commands,
-    window_query: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
-) {
-    let window = window_query.get_single().unwrap();
-
-    commands.spawn((
-        SpriteBundle {
-            transform: Transform::from_xyz(window.width() / 2., window.height() / 2., 0.),
-            texture: asset_server.load("sprites/ball_blue_large.png"),
-            ..default()
-        },
-        Player {},
-    ));
 }
